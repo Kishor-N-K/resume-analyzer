@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resume Analyzer</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="landing-header">
+    <div class="landing-container">
+        <div class="logo">
+    <span id="typing-logo"></span>
+</div>
+        <a href="/analyze" class="cta-outline">Analyze Now</a>
+    </div>
+</header>
+<script>
+const text = "Resume Analyzer";
+const speed = 150;      // typing speed (ms)
+const delay = 5000;     // wait time before retyping (ms)
+
+let i = 0;
+let element = null;
+
+function typeLogo() {
+    if (i < text.length) {
+        element.textContent += text.charAt(i);
+        i++;
+        setTimeout(typeLogo, speed);
+    } else {
+        // wait 5 seconds, then reset and retype
+        setTimeout(() => {
+            element.textContent = "";
+            i = 0;
+            typeLogo();
+        }, delay);
+    }
+}
+
+window.addEventListener("load", () => {
+    element = document.getElementById("typing-logo");
+    typeLogo();
+});
+</script>
+
+
+<!-- HERO -->
+<section class="hero-section">
+    <div class="landing-container hero-grid">
+
+        <div class="hero-text">
+            <h1>Create a stronger resume. Stand out.</h1>
+            <p>
+                Analyze your resume against job descriptions, identify skill gaps,
+                detect experience level, and generate a professional report in seconds.
+            </p>
+            <a href="/analyze" class="cta-primary">Analyze Your Resume</a>
+        </div>
+
+        <div class="hero-image">
+            <img src="{{ url_for('static', filename='images/hero.svg') }}" alt="Resume analysis illustration">
+        </div>
+
+    </div>
+</section>
+<!-- FEATURES -->
+<section class="features-section">
+    <div class="landing-container features-grid">
+
+        <div class="feature-card layered">
+            <h3>Smart Resume Matching</h3>
+            <p>
+                Compare your resume with one or multiple job descriptions.
+            </p>
+        </div>
+
+        <div class="feature-card layered">
+            <h3>Skill Gap Detection</h3>
+            <p>
+                Instantly identify missing keywords and required skills.
+            </p>
+        </div>
+
+        <div class="feature-card layered">
+            <h3>Professional PDF Report</h3>
+            <p>
+                Download a clean, shareable resume analysis report.
+            </p>
+        </div>
+
+    </div>
+</section>
+
+
+
+<!-- FOOTER -->
+<footer class="landing-footer">
+    &lt;/&gt; and Crafted with 💙 by Kishor N K
+</footer>
+
+</body>
+</html>

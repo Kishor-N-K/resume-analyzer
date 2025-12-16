@@ -1,0 +1,13 @@
+# Virtual environment
+vision_env/
+__pycache__/
+
+# Uploaded files
+uploads/
+
+# Generated PDFs
+*.pdf
+
+# OS files
+.DS_Store
+Thumbs.db

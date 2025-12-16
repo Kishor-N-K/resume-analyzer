@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resume Analyzer (ATS)</title>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="animated-bg">
+
+
+<!-- ANALYZER HEADER -->
+<div class="analyzer-header">
+    <h1>Resume Analyzer (ATS)</h1>
+    <p>Analyze your resume with AI-powered insights</p>
+</div>
+
+<div class="container analyzer-dashboard">
+
+    <!-- LEFT PANEL -->
+    <div class="analyzer-panel input-panel">
+        <h3>Upload Resume</h3>
+
+        <form method="POST"
+      action="/analyze"
+      enctype="multipart/form-data"
+      onsubmit="return showLoading();">
+
+
+            <label>Resume (PDF)</label>
+
+         <div class="upload-box">
+    <input type="file"
+           name="resume"
+           id="resume-upload"
+           required
+           onchange="showFileName(this)">
+
+    <label for="resume-upload" class="upload-label">
+        <div class="upload-icon">☁️</div>
+        <div class="upload-text" id="uploadText">
+            Drag & Drop files here
+        </div>
+        <div class="upload-or">or</div>
+        <div class="upload-btn">Browse Files</div>
+    </label>
+</div>
+
+
+
+
+            <label>Job Intent (optional)</label>
+            <input type="text"
+                   name="job_intent"
+                   placeholder="e.g. Senior Python Backend Developer">
+
+            <label>
+                Job Descriptions
+                <span class="helper">— separate using ---</span>
+            </label>
+            <textarea
+                name="job_description"
+                placeholder="Paste job descriptions here">
+            </textarea>
+
+        <button type="submit"
+        class="primary full-width"
+        id="analyzeBtn">
+    Analyze Resume
+</button>
+
+        </form>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="analyzer-panel result-panel">
+
+        {% if results %}
+            {% set top = results[0] %}
+
+            <!-- SCORE SUMMARY -->
+            <div class="score-summary">
+                <div>
+                    <h2>{{ top.score }}%</h2>
+                    <p>Overall Match Score</p>
+                </div>
+                <div class="experience-chip">
+                    {{ top.experience }}
+                </div>
+            </div>
+
+            <!-- JOB RESULTS -->
+            {% for job in results %}
+            <div class="job-result">
+
+                <div class="job-result-header">
+                    <strong>Job {{ job.job_number }}</strong>
+                    <span>{{ job.score }}%</span>
+                </div>
+
+                <div class="result-section">
+                    <div class="section-title">Matched Skills</div>
+                    {% for skill in job.matched %}
+                        <span class="badge green">{{ skill }}</span>
+                    {% endfor %}
+                </div>
+
+                <div class="result-section">
+    <div class="section-title">Missing Skills</div>
+
+    {% if job.missing %}
+        {% for skill in job.missing %}
+            <span class="badge red">{{ skill }}</span>
+        {% endfor %}
+    {% else %}
+        <p style="color:#16a34a; font-weight:500;">
+            No missing skills 🎉
+        </p>
+    {% endif %}
+</div>
+
+
+                <div class="result-section">
+                    <div class="section-title">Suggestions</div>
+                    <ul>
+                        {% for tip in job.suggestions %}
+                            <li>{{ tip }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+            </div>
+            {% endfor %}
+
+            <form action="/download">
+                <button class="primary full-width">
+                    Download PDF Report
+                </button>
+            </form>
+
+        {% else %}
+            <p class="empty-state">
+                Upload a resume and run analysis to see results here.
+            </p>
+        {% endif %}
+
+    </div>
+
+</div>
+<div id="pageLoader" class="page-loader">
+    <div class="loader-box">
+        <span class="spinner large"></span>
+        <p>Analyzing your resume…</p>
+    </div>
+</div>
+
+
+<!-- FOOTER -->
+<div class="footer">
+    &lt;/&gt; and Crafted with 💙 by Kishor N K
+</div>
+
+<script>
+function showLoading() {
+    const loader = document.getElementById("pageLoader");
+    const btn = document.getElementById("analyzeBtn");
+
+    // Show loader immediately
+    loader.style.display = "flex";
+
+    if (btn) btn.disabled = true;
+
+    // Auto-hide loader after 5 seconds (UX only)
+    setTimeout(() => {
+        loader.style.display = "none";
+    }, 5000); // 5 seconds
+
+    // IMPORTANT: allow form submission
+    return true;
+}
+</script>
+
+
+<script>
+function showFileName(input) {
+    if (input.files && input.files.length > 0) {
+        const fileName = input.files[0].name;
+        document.getElementById("uploadText").textContent =
+            "Selected file: " + fileName;
+    }
+}
+</script>
+
+</body>
+</html>
