@@ -1,6 +1,10 @@
-# Virtual environment
+# Virtual environments
 vision_env/
+venv/
+
+# Python cache
 __pycache__/
+*.pyc
 
 # Uploaded files
 uploads/
